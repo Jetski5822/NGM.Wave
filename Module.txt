@@ -1,0 +1,12 @@
+﻿Name: Wave
+AntiForgery: enabled
+Author: Nicholas Mayne
+Website: 
+Version: 1.0.0
+OrchardVersion: 1.6.0
+Description: Google Wave modelled on Orchard using SignalR and Forums.
+Features:
+    NGM.Wave:
+        Name: Wave
+		Category: Content
+        Dependencies: NGM.Forum, NGM.SignalR

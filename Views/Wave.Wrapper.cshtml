@@ -1,0 +1,17 @@
+﻿@{
+    Script.Require("jQuery");
+    Script.Require("Wave");
+}
+
+@Display(Model.Metadata.ChildContent)
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        $(function() {
+            var contentItemId = @Model.ContentItem.Id;
+
+            var contentItemVersion = @Model.ContentItem.Version;
+
+            $.wavehub.initConnection(contentItemId, contentItemVersion);
+        });
+    </script>
+}

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>WebDriver.ChromeDriver</id>
+    <version>26.0.1383.1</version>
+    <title>WebDriver ChromeDriver</title>
+    <authors>selenium</authors>
+    <owners>selenium</owners>
+    <projectUrl>http://code.google.com/p/chromedriver/downloads/list</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>ChromeDriver for WebDriver</description>
+    <releaseNotes />
+    <copyright />
+    <language />
+    <references />
+  </metadata>
+</package>
