@@ -46,8 +46,9 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.AspNet.SignalR.Core">
-      <HintPath>..\NGM.SignalR\bin\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\Microsoft.AspNet.SignalR.Core.1.1.1\lib\net40\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
@@ -114,23 +115,19 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\Web.config" />
-    <None Include="Views\Parts.Wave.CurrentViewingUsers.cshtml" />
-    <None Include="Views\Parts.Forums.Thread.List-UserWave.cshtml.bak" />
+    <Content Include="Views\Parts.Wave.CurrentViewingUsers.cshtml" />
+    <Content Include="Views\Parts.Forums.Thread.List-UserWave.cshtml.bak" />
     <Content Include="Placement.info">
       <SubType>Designer</SubType>
     </Content>
-    <None Include="Views\Content-UserWave.Detail.cshtml.bak" />
-    <None Include="Views\Content-UserWave.DetailAdmin.cshtml.bak" />
-    <None Include="Views\Content-Thread.Detail.cshtml.bak" />
+    <Content Include="Views\Content-UserWave.Detail.cshtml.bak" />
+    <Content Include="Views\Content-UserWave.DetailAdmin.cshtml.bak" />
+    <Content Include="Views\Content-Thread.Detail.cshtml.bak" />
     <Content Include="Views\Wave.Wrapper.cshtml" />
-    <None Include="web.Debug.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
-    <None Include="web.Release.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

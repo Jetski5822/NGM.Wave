@@ -110,11 +110,13 @@
         },
 
         notifiedPostCreated: function (threadId, postId, location, text) {
-            var article = $("article[data-contentitem-id='" + threadId + "']");
-            if (article.length == 0)
-                return;
+            console.log("TODO: Render shape...");
+            
+            //var article = $("article[data-contentitem-id='" + threadId + "'] ul");
+            //if (article.length == 0)
+            //    return;
 
-            article.find(".post-content").html(text);
+
             //// Do I create a content controller that this should go back to to get the content? Maybe accept a list of Ids..?
             //var currentLocation = window.location;
 
@@ -126,7 +128,7 @@
         },
 
         notifiedPostRemoved: function (postId) {
-            markContentItemRemoved(postId);
+            console.log("TODO: Remove shape...");
         },
 
         notifiedUserJoined: function (user) {

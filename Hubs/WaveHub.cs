@@ -1,48 +1,47 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
+using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using NGM.Wave.Models;
 using NGM.Wave.Services;
-using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Environment;
 using Orchard.Localization;
 using Orchard.Security;
+using Orchard.Services;
 
 namespace NGM.Wave.Hubs {
+    //https://github.com/SignalR/SignalR/wiki/Hubs
     [HubName("waveHub")]
     public class WaveHub : Hub {
         private readonly Work<IContentManager> _workContentManager;
         private readonly Work<IAuthenticationService> _workAuthenticationService;
         private readonly Work<IContentService> _workContentService;
-        private readonly ICacheManager _cacheManager;
+        private readonly IClock _clock;
 
         private const string ContentGroupNameFormat = "ContentItem-{0}";
 
         public WaveHub(Work<IContentManager> workContentManager,
                        Work<IAuthenticationService> workAuthenticationService,
                        Work<IContentService> workContentService,
-                       ICacheManager cacheManager) {
+                       IClock clock) {
             _workContentManager = workContentManager;
             _workAuthenticationService = workAuthenticationService;
             _workContentService = workContentService;
-            _cacheManager = cacheManager;
+            _clock = clock;
         }
 
-        private IContentManager _contentManager {
+        private IContentManager ContentManager {
             get { return _workContentManager.Value; }
         }
 
-        private IAuthenticationService _authenticationService {
+        private IAuthenticationService AuthenticationService {
             get { return _workAuthenticationService.Value; }
         }
 
-        private IContentService _contentService {
+        private IContentService ContentService {
             get { return _workContentService.Value; }
         }
 
@@ -56,27 +55,27 @@ namespace NGM.Wave.Hubs {
         }
 
         public override Task OnConnected() {
-            return Clients.All.joined(Context.ConnectionId, DateTime.Now.ToString());
+            return Clients.All.joined(Context.ConnectionId, _clock.UtcNow.ToString(CultureInfo.InvariantCulture));
         }
 
         public override Task OnDisconnected() {
-            return Clients.All.leave(Context.ConnectionId, DateTime.Now.ToString());
+            return Clients.All.leave(Context.ConnectionId, _clock.UtcNow.ToString(CultureInfo.InvariantCulture));
         }
 
         public override Task OnReconnected() {
-            return Clients.All.rejoined(Context.ConnectionId, DateTime.Now.ToString());
+            return Clients.All.rejoined(Context.ConnectionId, _clock.UtcNow.ToString(CultureInfo.InvariantCulture));
         }
 
         public void Join(int contentItemId) {
-            Join(false, contentItemId);
+            Join(contentItemId, false);
         }
 
-        public void Join(bool reconnecting, int contentItemId) {
+        public void Join(int contentItemId, bool reconnecting) {
             
-            IUser user = _authenticationService.GetAuthenticatedUser() ?? new UnauthenticatedUser(Context.ConnectionId);
+            IUser user = AuthenticationService.GetAuthenticatedUser() ?? new UnauthenticatedUser(Context.ConnectionId);
 
             if (!reconnecting) {
-                _contentService.UpdateActivity(user, Context.ConnectionId, UserAgent);
+                ContentService.UpdateActivity(user, Context.ConnectionId, UserAgent);
             }
 
             var clientState = new ClientState{ActiveContent = contentItemId};
@@ -95,7 +94,7 @@ namespace NGM.Wave.Hubs {
 
             var userViewModel = new UserViewModel(user);
 
-            var isOwner = _contentManager.Get(clientState.ActiveContent).As<ICommonPart>().Owner == user;;
+            var isOwner = ContentManager.Get(clientState.ActiveContent).As<ICommonPart>().Owner == user;;
 
             var contentGroupName = ContentGroupName(clientState.ActiveContent);
 

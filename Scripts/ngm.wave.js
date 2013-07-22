@@ -8,36 +8,36 @@
         contentitemid = null;
 
     wave.client.addUser = function (user, groupName, isOwner) {
-        console.debug("User Joined");
+        console.log("User Joined");
         ui.notifiedUserJoined(user);
     };
 
     wave.client.notifyThreadCreated = function (forumId, threadId, postId, location) {
-        console.debug("Thread Created with id: " + threadId + " at location: " + location);
+        console.log("Thread Created with id: " + threadId + " at location: " + location);
         ui.notifiedThreadCreated(threadId, location);
     };
 
     wave.client.notifyThreadRemoved = function (forumId, threadId) {
-        console.debug("Thread Removed with id: " + threadId);
+        console.log("Thread Removed with id: " + threadId);
         ui.notifiedThreadRemoved(threadId);
     };
 
     wave.client.notifyPostCreated = function (forumId, threadId, postId, repliedOnId, location, text) {
-        console.debug("Post Created with id: " + postId + " at location: " + location);
+        console.log("Post Created with id: " + postId + " at location: " + location);
         ui.notifiedPostCreated(threadId, postId, location, text);
     };
 
     wave.client.notifyPostRemoved = function (forumId, threadId, postId) {
-        console.debug("Post Removed with id: " + postId);
+        console.log("Post Removed with id: " + postId);
         ui.notifiedPostRemoved(postId, location);
     };
 
     $(function () {
         var initial = true;
         
-        console.debug("Wave UI Initializing...");
+        console.log("Wave UI Initializing...");
         ui.initialize();
-        console.debug("Wave UI Initialized!");
+        console.log("Wave UI Initialized!");
 
         $.wavehub = {};
 
@@ -49,28 +49,28 @@
             //    options.transport = transport;
             //}
             
-            console.debug("Wave Connection Initializing...");
+            console.log("Wave Connection Initializing...");
             contentitemid = contentItemId;
             
-            connection.hub.logging = true;
-            connection.hub.start()
-                .done(function () {
-                    console.debug("Hub Started!");
-                    wave.server.join(contentItemId)
-                        .fail(function (e) {
-                            console.debug("Wave Connection failed to Initialize!");
-                        })
-                        .done(function() {
-                            console.debug("Wave Connection Initialized!");
-                        });
-                });
+            connection.hub.logging = false;
+            connection.hub.start(function() {
+                console.log("Hub Started! Connecting to the wave...");
+                wave.server.join(contentItemId)
+                    .fail(function (e) {
+                        console.log(e);
+                        console.log("Wave Connection failed to Initialize!");
+                    })
+                    .done(function() {
+                        console.log("Wave Connection Initialized!");
+                    });
+            });
             
             connection.hub.stateChanged(function (change) {
                 if (change.newState === $.connection.connectionState.reconnecting) {
-                    console.debug("State Reconnecting");
+                    console.log("State Reconnecting");
                 }
                 else if (change.newState === $.connection.connectionState.connected) {
-                    console.debug("State Connected");
+                    console.log("State Connected");
                     if (!initial) {
                         
                         
@@ -89,13 +89,13 @@
                 setTimeout(function () {
                     connection.hub.start()
                         .done(function () {
-                            console.debug("Hub Re-Started!");
-                            wave.server.join(true, contentItemId)
+                            console.log("Hub Re-Started!");
+                            wave.server.join(contentItemId, true)
                                 .fail(function (e) {
-                                    console.debug("Wave Connection failed to Re-Initialize!");
+                                    console.log("Wave Connection failed to Re-Initialize!");
                                 })
                                 .done(function () {
-                                    console.debug("Wave Connection ReInitialized!");
+                                    console.log("Wave Connection ReInitialized!");
                                 });
                         });
                 }, 5000);
@@ -103,7 +103,7 @@
 
             connection.hub.error(function (err) {
                 // Make all pending messages failed if there's an error
-                console.debug(err);
+                console.log(err);
             });
         };
     });
